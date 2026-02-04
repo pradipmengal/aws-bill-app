@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Region-wise Billing</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <i class="fa-brands fa-aws"></i>
+                <span>CloudCosts</span>
+            </div>
+            <div class="date-controls">
+                <input type="date" id="startDate">
+                <span class="separator">to</span>
+                <input type="date" id="endDate">
+                <button id="updateBtn" class="btn-primary">
+                    <i class="fa-solid fa-sync-alt"></i> Update
+                </button>
+                <div style="width: 1px; height: 24px; background: var(--card-border); margin: 0 0.5rem;"></div>
+                <button id="themeToggle" class="theme-toggle" title="Toggle Theme">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <button id="logoutBtn" class="btn-secondary hidden" title="Logout">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <section class="summary-cards">
+                <div class="card total-cost-card">
+                    <h3>Total Cost</h3>
+                    <div class="value" id="totalCostDisplay">$0.00</div>
+                    <div class="subtitle">Amortized Cost (Selected Period)</div>
+                </div>
+                <div class="card trend-card">
+                    <h3>Top Region</h3>
+                    <div class="value" id="topRegionDisplay">-</div>
+                    <div class="subtitle" id="topRegionAmount">$0.00</div>
+                </div>
+            </section>
+
+            <section class="charts-container">
+                <div class="card chart-card wide">
+                    <h3>Cost Distribution</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="regionChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card table-card">
+                    <div class="card-header-row">
+                        <h3>Breakdown</h3>
+                        <div class="view-switcher">
+                            <button class="view-btn active" data-view="regions">By Region</button>
+                            <button class="view-btn" data-view="consolidated">Consolidated</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="costTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Cost ($)</th>
+                                    <th>% of Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="loader" class="loader-overlay hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>AWS Login</h2>
+                <p>Enter your AWS Read-Only Credentials</p>
+                <p class="demo-note">Or use Demo Mode to explore without keys</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="accessKey">Access Key ID</label>
+                    <input type="text" id="accessKey" placeholder="AKIA..." required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="secretKey">Secret Access Key</label>
+                    <input type="password" id="secretKey" placeholder="wJalr..." required autocomplete="off">
+                </div>
+                <div class="button-group">
+                    <button type="button" id="demoBtn" class="btn-secondary">Use Demo Data</button>
+                    <button type="submit" class="btn-primary">Login & View Costs</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+
+</html>
