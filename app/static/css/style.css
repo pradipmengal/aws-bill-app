@@ -434,6 +434,42 @@ tr:last-child td {
     border-bottom: none;
 }
 
+.error-banner {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
 /* Modal */
 .modal-overlay {
     position: fixed;
@@ -490,6 +526,25 @@ tr:last-child td {
     font-size: 0.85rem !important;
     opacity: 0.6;
     font-style: italic;
+    margin-bottom: 0.5rem;
+}
+
+.help-link {
+    display: inline-block;
+    color: var(--accent-secondary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+}
+
+.help-link:hover {
+    color: var(--accent-primary);
+    text-decoration: underline;
+}
+
+.help-link i {
+    margin-right: 4px;
 }
 
 .form-group {
@@ -543,7 +598,7 @@ tr:last-child td {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 3000;
     transition: opacity 0.3s;
 }
 

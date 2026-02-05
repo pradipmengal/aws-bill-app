@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginModal = document.getElementById('loginModal');
     const loginForm = document.getElementById('loginForm');
     const demoBtn = document.getElementById('demoBtn');
+    const loginError = document.getElementById('loginError');
 
     const totalCostDisplay = document.getElementById('totalCostDisplay');
     const topRegionDisplay = document.getElementById('topRegionDisplay');
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const accessKey = document.getElementById('accessKey').value.trim();
         const secretKey = document.getElementById('secretKey').value.trim();
@@ -50,15 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
             sessionStorage.setItem('aws_access_key', accessKey);
             sessionStorage.setItem('aws_secret_key', secretKey);
             sessionStorage.setItem('auth_mode', 'credentials');
-            hideLoginModal();
-            fetchData();
+
+            const success = await fetchData();
+            if (success) {
+                hideLoginModal();
+            }
         }
     });
 
-    demoBtn.addEventListener('click', () => {
+    demoBtn.addEventListener('click', async () => {
         sessionStorage.setItem('auth_mode', 'demo');
-        hideLoginModal();
-        fetchData();
+        const success = await fetchData();
+        if (success) {
+            hideLoginModal();
+        }
     });
 
     function initializeDates() {
@@ -101,17 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function checkAuth() {
+    async function checkAuth() {
         const authMode = sessionStorage.getItem('auth_mode');
 
         if (authMode) {
-            // User has already chosen a mode in this session
-            hideLoginModal();
-            fetchData();
-        } else {
-            // First visit
-            showLoginModal();
+            // User had a session, verify it still works before hiding modal
+            const success = await fetchData();
+            if (success) {
+                hideLoginModal();
+                return;
+            }
         }
+
+        // No session or verification failed
+        showLoginModal();
     }
 
     function showLoginModal() {
@@ -122,6 +131,19 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideLoginModal() {
         loginModal.classList.add('hidden');
         logoutBtn.classList.remove('hidden');
+        clearError();
+    }
+
+    function displayError(msg) {
+        if (!loginError) return;
+        loginError.textContent = msg;
+        loginError.classList.remove('hidden');
+    }
+
+    function clearError() {
+        if (!loginError) return;
+        loginError.textContent = '';
+        loginError.classList.add('hidden');
     }
 
     function logout() {
@@ -132,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset UI
         document.getElementById('accessKey').value = '';
         document.getElementById('secretKey').value = '';
+        clearError();
 
         showLoginModal();
     }
@@ -174,24 +197,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            clearError();
             const response = await fetch(`/api/billing?start_date=${start}&end_date=${end}`, {
                 headers: headers
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
+
+                if (response.status === 401) {
+                    displayError("Invalid AWS credentials. Please double-check your Access Key and Secret Key.");
+                    logout();
+                    return false;
+                } else if (response.status === 403) {
+                    displayError("Access denied. Your AWS user needs 'ce:GetCostAndUsage' permissions to view billing data.");
+                    return false;
+                }
+
                 throw new Error(errorData.detail || 'Failed to fetch data');
             }
 
             const data = await response.json();
             currentData = data; // Store globally
             updateDashboard(data);
+            return true;
         } catch (error) {
             console.error('Error:', error);
-            alert(`Error: ${error.message}`);
-            if (error.message.includes('Auth') || error.message.includes('Credential')) {
-                logout();
+            // Show non-auth errors in dashboard context if modal is hidden
+            if (loginModal.classList.contains('hidden')) {
+                if (error.message && !error.message.includes('object Object')) {
+                    alert(`Error: ${error.message}`);
+                }
+            } else {
+                displayError(`Error: ${error.message}`);
             }
+            return false;
         } finally {
             hideLoader();
         }
