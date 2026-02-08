@@ -89,6 +89,30 @@ header {
     border-bottom: 1px solid var(--card-border);
 }
 
+.main-nav {
+    display: flex;
+    gap: 2rem;
+}
+
+.main-nav a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    color: var(--accent-primary);
+}
+
+.main-nav a.active {
+    border-bottom-color: var(--accent-primary);
+}
+
 .logo {
     display: flex;
     align-items: center;
@@ -296,7 +320,7 @@ h3 {
 
 .summary-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
 }
@@ -312,6 +336,29 @@ h3 {
     letter-spacing: -0.02em;
 }
 
+.yesterday-cost-card .value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--success-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.credits-card .value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--success-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+.daily-cost-card .value {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
 .trend-card .value {
     font-size: 1.75rem;
     font-weight: 600;
@@ -324,7 +371,79 @@ h3 {
     color: var(--text-secondary);
 }
 
-#topRegionAmount {
+.view-details-link {
+    font-size: 0.8rem;
+    color: var(--success-color);
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.view-details-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.credits-details-container {
+    margin-top: 2rem;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.credits-summary-row {
+    display: flex;
+    gap: 3rem;
+    margin: 1.5rem 0 2rem 0;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+}
+
+.credit-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.credit-stat .label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.credit-stat .value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.credit-stat .value.main-value {
+    font-size: 2.5rem;
+}
+
+.api-note {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 1.5rem;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#topRegionAmount,
+#topServiceAmount {
     color: var(--accent-secondary);
     font-weight: 600;
     font-size: 1.1rem;
@@ -332,14 +451,19 @@ h3 {
 
 .charts-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
     .charts-container {
         grid-template-columns: 1fr;
     }
+}
+
+.chart-card {
+    min-height: 400px;
 }
 
 .chart-wrapper {
@@ -639,4 +763,95 @@ tr:last-child td {
 
 ::-webkit-scrollbar-thumb:hover {
     background: #475569;
+}
+
+/* Usage Page Styles */
+.region-group-header td {
+    border-bottom: 2px solid var(--accent-primary) !important;
+    padding-top: 1.5rem !important;
+    font-size: 1rem !important;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(139, 92, 246, 0.05);
+}
+
+.usage-summary-card .value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.main-nav {
+    margin: 0 2rem;
+}
+
+/* Credit Manager Styles */
+.header-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.delete-credit-btn {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.delete-credit-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.modal-content .form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+/* Usage Tab Search Box */
+.header-tools {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    width: 300px;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+    width: 350px;
+}
+
+.search-box i {
+    color: var(--text-secondary);
+    margin-right: 0.75rem;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    width: 100%;
+    outline: none;
+    font-size: 0.9rem;
 }

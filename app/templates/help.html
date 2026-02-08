@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -119,8 +119,10 @@
         <div class="help-card">
             <h1>AWS Permissions Help</h1>
             <p class="intro">
-                To use the CloudCosts dashboard, you need an AWS IAM user with specific permissions to read cost and
+                To use the <strong>AWS Cost Explorer Dashboard</strong>, you need an AWS IAM user with specific
+                permissions to read cost and
                 usage data. We recommend creating a <span class="highlight">Read-Only</span> user for maximum security.
+                This dashboard displays daily costs, service breakdowns, region breakdowns, and detailed resource usage.
             </p>
 
             <div class="step">
@@ -136,7 +138,7 @@
                 <h3>2. Attach Permissions Policy</h3>
                 <p>
                     Choose <strong>Attach policies directly</strong> and then <strong>Create policy</strong>. Use the
-                    JSON editor to paste the following policy which specifically allows accessing billing data:
+                    JSON editor to paste the following policy which allows read-only access to AWS Cost Explorer data:
                 </p>
                 <div class="policy-block">
                     <pre>
@@ -147,13 +149,28 @@
             "Effect": "Allow",
             "Action": [
                 "ce:GetCostAndUsage",
-                "ce:GetDimensionValues"
+                "ce:GetDimensionValues",
+                "ce:GetCostForecast",
+                "ce:GetUsageForecast"
             ],
             "Resource": "*"
         }
     ]
 }</pre>
                 </div>
+                <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">
+                    <strong>What these permissions allow:</strong>
+                </p>
+                <ul style="color: var(--text-secondary); font-size: 0.9rem; margin-left: 1.5rem; line-height: 1.8;">
+                    <li><code>ce:GetCostAndUsage</code> - Retrieve cost and usage data (required for all dashboard
+                        features)</li>
+                    <li><code>ce:GetDimensionValues</code> - Get available regions and services</li>
+                    <li><code>ce:GetCostForecast</code> - Access cost forecasting data (optional)</li>
+                    <li><code>ce:GetUsageForecast</code> - Access usage forecasting data (optional)</li>
+                </ul>
+                <p style="margin-top: 1rem; color: var(--success-color); font-size: 0.9rem;">
+                    ✓ This is a <strong>read-only</strong> policy - it cannot modify or delete any AWS resources.
+                </p>
             </div>
 
             <div class="step">
@@ -169,8 +186,15 @@
                 <h3>4. Use your keys</h3>
                 <p>
                     Copy your <span class="highlight">Access Key ID</span> and <span class="highlight">Secret Access
-                        Key</span> and enter them in the login modal to view your region-wise billing dashboard.
+                        Key</span> and enter them in the login modal to view your AWS Cost Explorer dashboard with:
                 </p>
+                <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem; line-height: 1.8;">
+                    <li>Daily cost trends (last 7 days)</li>
+                    <li>Service-wise cost breakdown</li>
+                    <li>Region-wise cost breakdown</li>
+                    <li>Detailed region-service breakdown table</li>
+                    <li>Resource usage tracking</li>
+                </ul>
             </div>
 
             <div style="text-align: center; margin-top: 3rem;">

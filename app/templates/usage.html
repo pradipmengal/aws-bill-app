@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Region-wise Billing</title>
+    <title>AWS Resource Usage</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,21 +16,18 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/static/css/style.css">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="app-container">
         <header>
-            <div class="logo">
+            <div class="logo" onclick="window.location.href='/'" style="cursor: pointer;">
                 <i class="fa-brands fa-aws"></i>
-                <span>AWS Cost Explorer</span>
+                <span>CloudCosts</span>
             </div>
             <nav class="main-nav">
-                <a href="/" class="active">Dashboard</a>
-                <a href="/usage">Usage</a>
+                <a href="/">Billing</a>
+                <a href="/usage" class="active">Usage</a>
             </nav>
             <div class="date-controls">
                 <input type="date" id="startDate">
@@ -51,61 +48,36 @@
 
         <main>
             <section class="summary-cards">
-                <div class="card total-cost-card">
-                    <h3>Total Cost</h3>
-                    <div class="value" id="totalCostDisplay">$0.00</div>
-                    <div class="subtitle" id="dateRangeDisplay">Select date range</div>
-                </div>
-                <div class="card yesterday-cost-card">
-                    <h3>Yesterday's Bill</h3>
-                    <div class="value" id="yesterdayCostDisplay">$0.00</div>
-                    <div class="subtitle">Previous Day Total</div>
-                </div>
-                <div class="card daily-cost-card">
-                    <h3>Top Service</h3>
-                    <div class="value" id="topServiceDisplay">-</div>
-                    <div class="subtitle" id="topServiceAmount">$0.00</div>
-                </div>
-                <div class="card trend-card">
-                    <h3>Top Region</h3>
-                    <div class="value" id="topRegionDisplay">-</div>
-                    <div class="subtitle" id="topRegionAmount">$0.00</div>
+                <div class="card usage-summary-card">
+                    <h3>Resources Tracked</h3>
+                    <div class="value" id="totalResourcesDisplay">0</div>
+                    <div class="subtitle">Distinct components categorized</div>
                 </div>
             </section>
 
-            <section class="charts-container">
-                <div class="card chart-card">
-                    <h3>Daily Cost Trend (Last 7 Days)</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="dailyChart"></canvas>
+            <section class="usage-container">
+                <div class="card table-card wide">
+                    <div class="card-header-row">
+                        <h3>Resource Usage Detail</h3>
+                        <div class="header-tools">
+                            <div class="search-box">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" id="usageSearch" placeholder="Search services or components...">
+                            </div>
+                            <div class="view-switcher">
+                                <button class="view-btn active" data-view="regions">By Region</button>
+                                <button class="view-btn" data-view="consolidated">Consolidated</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="card chart-card">
-                    <h3>Service-wise Cost</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="serviceChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="card chart-card">
-                    <h3>Region-wise Cost</h3>
-                    <div class="chart-wrapper">
-                        <canvas id="regionChart"></canvas>
-                    </div>
-                </div>
-            </section>
-
-            <section class="breakdown-section">
-                <div class="card table-card">
-                    <h3>Region-wise Service Breakdown</h3>
                     <div class="table-container">
-                        <table id="breakdownTable">
+                        <table id="usageTable">
                             <thead>
                                 <tr>
-                                    <th>Region / Service</th>
-                                    <th>Cost ($)</th>
-                                    <th>% of Total</th>
+                                    <th>Service / Component</th>
+                                    <th>Usage Count</th>
+                                    <th>Unit</th>
+                                    <th>Cost</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,21 +87,19 @@
                     </div>
                 </div>
             </section>
-    </div>
-    </main>
+        </main>
     </div>
 
     <div id="loader" class="loader-overlay hidden">
         <div class="spinner"></div>
     </div>
 
-    <!-- Login Modal -->
+    <!-- Login Modal (Same as index.html) -->
     <div id="loginModal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>AWS Login</h2>
                 <p>Enter your AWS Read-Only Credentials</p>
-                <p class="demo-note">Or use Demo Mode to explore without keys</p>
                 <a href="/help" class="help-link"><i class="fa-solid fa-circle-question"></i> What permissions do I
                     need?</a>
             </div>
@@ -145,13 +115,13 @@
                 </div>
                 <div class="button-group">
                     <button type="button" id="demoBtn" class="btn-secondary">Use Demo Data</button>
-                    <button type="submit" class="btn-primary">Login & View Costs</button>
+                    <button type="submit" class="btn-primary">Login & View Usage</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="/static/js/dashboard.js"></script>
+    <script src="/static/js/usage.js"></script>
 </body>
 
 </html>
